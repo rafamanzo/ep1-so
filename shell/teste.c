@@ -1,9 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <ncurses.h>
 #include <dirent.h>
+#include <sys/stat.h>
+#include <time.h>
 
-char *files[50];
+struct arquivo
+{
+ char *name;
+ char *date;
+ char *size;
+ char *perm;
+};
+typedef struct arquivo file;
+
+file files[50];
 
 void printMenu(WINDOW *menu, int tam, int atual)
 {
@@ -23,9 +35,9 @@ void printMenu(WINDOW *menu, int tam, int atual)
 	for(y = 1; i <= max; i++, y++)
 	{
 		if( atual == i) 
-			mvwprintw(menu, y, 0, "->  %d. %s\t", i-1,files[i-1]);
+			mvwprintw(menu, y, 0, "->  %d. %s %s\t", i-1,files[i-1].name, files[i-1].date);
 		else
-			mvwprintw(menu, y, 0, "    %d. %s\t", i-1,files[i-1]);
+			mvwprintw(menu, y, 0, "    %d. %s %s\t", i-1,files[i-1].name, files[i-1].date);
 	}
 	mvwprintw(menu,y, 0, "V=Visualizar, E=Editar, R=Executar, C=Mudar Dir, U=Subir, D=Descer, X=Sair");
 	wrefresh(menu);
@@ -74,6 +86,29 @@ void parser(WINDOW *menu, int tam, int qtd)
 	}
 }	
 
+void newFile(int i , char *filename)
+{
+ struct stat buf;	
+ struct tm *tm;
+ file new;
+ char data[10];
+
+	 /* Nome */
+	new.name = malloc(strlen(filename)+1);
+	strcpy(new.name,filename);
+
+	stat (filename, &buf);
+	/* Data */
+	tm = localtime(&buf.st_mtime);
+	strftime(data, sizeof(data), "%d %b %y", tm);
+	new.date = malloc(strlen(data)+1);
+	strcpy(new.date,data);
+
+	files[i] = new;
+
+ /* para o tamanho buf.st_size */
+}
+
 int main(int argc,char *argv[])
 {
  	WINDOW *menu;
@@ -89,7 +124,7 @@ int main(int argc,char *argv[])
 
 	dp = opendir(".");
 	for(i = 0; (entry = readdir(dp)); i++)
-		files[i] = entry->d_name;
+		newFile(i,entry->d_name);
 
 	initscr();
 	clear();
