@@ -39,33 +39,33 @@ void parser(WINDOW *menu, int tam, int qtd)
 		c = wgetch(menu);
 		switch(c)
 		{
-			case 86: /* V - Visualizar */
+			case 'v': /* V - Visualizar */
 				
 				break;
-			case 69: /* E - Editar */
+			case 'e': /* E - Editar */
 
 				break;
-			case 82: /* R - Executar */
+			case 'r': /* R - Executar */
 				
 				break;
-			case 67: /* C - Mudar Diretório */
+			case 'c': /* C - Mudar Diretório */
 				
 				break;
-			case 85:  /* U - Subir */
+			case 'u':  /* U - Subir */
 				if( atual == 1)
 					atual = 1;
 				else
 					atual--;
 				printMenu(menu, tam, atual);
 				break;
-			case 68: /* D - Descer */
+			case 'd': /* D - Descer */
 				if( atual == qtd)
 					atual = qtd;
 				else
 					atual++;
 				printMenu(menu, tam, atual);
 				break;
-			case 88: /* X - Sair */
+			case 'x': /* X - Sair */
 				return;
 				break;
 		}
