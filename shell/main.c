@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ncurses.h>
+#include<string.h>
 #include "files.h"
+#include "commands.h"
 
-void printMenu(WINDOW *menu, int tam, int atual)
-{
+void printMenu(WINDOW *menu, int tam, int atual){
 	int y, i, max;
 	if( atual > tam )
 	{
@@ -29,10 +30,10 @@ void printMenu(WINDOW *menu, int tam, int atual)
 	wrefresh(menu);
 }
 
-void parser(WINDOW *menu, int tam, int qtd)
-{
+void parser(WINDOW *menu, int tam, int qtd){
 	int atual = 1;
 	int c;
+  char command[NAME_MAX + 5];
 
 	while(1)
 	{	
@@ -40,13 +41,23 @@ void parser(WINDOW *menu, int tam, int qtd)
 		switch(c)
 		{
 			case 'v': /* V - Visualizar */
-				
+        if(files[atual - 1].perm[0] == '-'){
+          strcpy(command, "less ");
+          strcat(command, files[atual - 1].name);
+				  run(command);
+        }
 				break;
 			case 'e': /* E - Editar */
-
+        if(files[atual - 1].perm[0] == '-'){
+          strcpy(command, "vi ");
+          strcat(command, files[atual - 1].name);
+          run(command);
+        }
 				break;
 			case 'r': /* R - Executar */
-				
+        if(files[atual - 1].perm[0] == '-' && files[atual - 1].perm[1] == 'r'){
+				  run(files[atual-1].name);
+        }
 				break;
 			case 'c': /* C - Mudar Diretório */
 				
@@ -72,8 +83,7 @@ void parser(WINDOW *menu, int tam, int qtd)
 	}
 }	
 
-int main(int argc,char *argv[])
-{
+int main(int argc,char *argv[]){
  	WINDOW *menu;
 	DIR *dp;
 	struct dirent *entry;
