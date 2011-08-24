@@ -1,0 +1,9 @@
+Assista ao vídeo da "instalação" em http://www.youtube.com/watch?v=YrQaUhR8gdg ou, em um terminal do Ubuntu 11.04, faça:
+
+sudo apt-get install qemu build-essentials
+wget http://pdos.csail.mit.edu/6.828/xv6/xv6-rev5.tar.gz
+tar -zxf xv6-rev5.tar.gz
+cd xv6
+make
+make qemu
+
