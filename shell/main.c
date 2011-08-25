@@ -5,6 +5,8 @@
 #include "files.h"
 #include "commands.h"
 
+char erro[256];
+
 void printMenu(WINDOW *menu, int tam, int atual){
 	int y, i, max;
 	if( atual > tam-1 )
@@ -17,9 +19,12 @@ void printMenu(WINDOW *menu, int tam, int atual){
 		i = 0;
 		max = tam-1;
 	}
+  wclear(menu);
 	wrefresh(menu);
-	mvwprintw(menu,0, 0, "Diretório Corrente: %s",get_current_dir_name());/* NÃO FUNCIONA */
-	for(y = 1; i <= max; i++, y++)
+  mvwprintw(menu,0, 0, "%s",erro);/* NÃO FUNCIONA */
+  strcpy(erro, "");
+	mvwprintw(menu,1, 0, "Diretório Corrente: %s",getcwd(0,0));/* NÃO FUNCIONA */
+	for(y = 2; i <= max; i++, y++)
 	{
 		if( atual == i) 
 			mvwprintw(menu, y, 0, "->  %d. %s %s %s\t", i,files[i].name, files[i].date,files[i].perm);
@@ -33,7 +38,7 @@ void printMenu(WINDOW *menu, int tam, int atual){
 void parser(WINDOW *menu, int tam, int quantidade){
 	int atual = 0;
 	int c, qtd = quantidade;
-  	char command[NAME_MAX + 5];
+  char command[NAME_MAX + 5];
 
 	while(1)
 	{	
@@ -45,29 +50,44 @@ void parser(WINDOW *menu, int tam, int quantidade){
 				  strcpy(command, "less ");
 				  strcat(command, files[atual].name);
 							  run(command);
-				}
+				}else{
+          strcpy(erro, "Não é arquivo regular");
+          strcat(erro, files[atual].name);
+        }
 				break;
 			case 'e': /* E - Editar */
 				if(files[atual].perm[0] == '-'){
 				  strcpy(command, "vi ");
 				  strcat(command, files[atual].name);
 				  run(command);
-				}
+				}else{
+          strcpy(erro, "Não é arquivo regular");
+          strcat(erro, files[atual].name);
+        }
 				break;
 			case 'r': /* R - Executar */
 				if(files[atual].perm[0] == '-' && files[atual].perm[1] == 'r'){
 							  run(files[atual].name);
-				}
+				}else{
+          strcpy(erro, "Não é arquivo regular ou não é executável");
+          strcat(erro, files[atual].name);
+        }
 				break;
 			case 'c': /* C - Mudar Diretório */
 				if(files[atual].perm[0] == 'd'){
 					if( chdir(files[atual].name) != -1){
-						mvwprintw(menu, 10, 0, "erro %s\t",files[atual].name);
-						qtd = startDir(files[atual].name);
+						qtd = startDir(".");
 						atual = 0;
 						printMenu(menu, tam, atual);
-					}
-				}
+					}else{
+            strcpy(erro, "Falha ao abrir diretório");
+            printMenu(menu, tam, atual);
+          }
+				}else{
+          strcpy(erro, "Não é diretorio");
+          strcat(erro, files[atual].name);
+          printMenu(menu, tam, atual);
+        }
 				break;
 			case 'u':  /* U - Subir */
 				if( atual == 0)
@@ -92,6 +112,8 @@ void parser(WINDOW *menu, int tam, int quantidade){
 int main(int argc,char *argv[]){
  	WINDOW *menu;
 	int i, tam;
+
+  strcpy(erro, "");
 
 	if( argc != 2 || atoi(argv[1]) < 1)
 	{
