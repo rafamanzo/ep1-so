@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <ncurses.h>
 #include <string.h>
+#include <unistd.h>
+#include <dirent.h>
 #include "files.h"
 #include "commands.h"
 
@@ -21,9 +23,9 @@ void printMenu(WINDOW *menu, int tam, int atual){
 	}
   wclear(menu);
 	wrefresh(menu);
-  mvwprintw(menu,0, 0, "%s",erro);/* NÃO FUNCIONA */
+  mvwprintw(menu,0, 0, "%s",erro);
   strcpy(erro, "");
-	mvwprintw(menu,1, 0, "Diretório Corrente: %s",getcwd(0,0));/* NÃO FUNCIONA */
+	mvwprintw(menu,1, 0, "Diretório Corrente: %s",getcwd(0,0));
 	for(y = 2; i <= max; i++, y++)
 	{
 		if( atual == i) 
@@ -66,7 +68,7 @@ void parser(WINDOW *menu, int tam, int quantidade){
         }
 				break;
 			case 'r': /* R - Executar */
-				if(files[atual].perm[0] == '-' && files[atual].perm[1] == 'r'){
+				if(files[atual].perm[0] == '-' && files[atual].perm[3] == 'r'){
 							  run(files[atual].name);
 				}else{
           strcpy(erro, "Não é arquivo regular ou não é executável");

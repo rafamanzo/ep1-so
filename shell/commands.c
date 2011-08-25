@@ -1,4 +1,5 @@
 #include<unistd.h>
+#include <sys/wait.h>
 #include<ncurses.h>
 
 int run(char *program){
@@ -8,7 +9,7 @@ int run(char *program){
   def_prog_mode();
 	endwin();
 
-  if(child_pid = fork()){
+  if((child_pid = fork())){
     waitpid(child_pid, 0, 0);
     
     /*ncurses retoma a tela*/
@@ -17,5 +18,6 @@ int run(char *program){
     return 0;
   }else{
     execl("/bin/sh","sh","-c",program,(char *) 0);
+    return -1;
   }
 }
