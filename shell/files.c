@@ -9,12 +9,13 @@ void stringCopy( char dest[], char *in)
 
 	for( i = 0; i <= strlen(in)+1; i++)
 		dest[i] = in[i];
+	dest[i] = '\0';
 }
 
 void permission(char perm[], mode_t mode)
 {
 	perm[1]=perm[2]=perm[3]=perm[4]=perm[5]=perm[6]=perm[7]=perm[8]=perm[9]= '-';
-	perm[10] ='\n';
+	perm[10] ='\0';
 
 	/* Arquivo regular */
 	if( S_ISREG(mode) )
@@ -85,6 +86,16 @@ void newFile(int i , char *filename)
  /* para o tamanho buf.st_size */
 }
 
+int startDir(char *dirname)
+{
+ int i;
+ DIR *dp;
+ struct dirent *entry;
 
+	dp = opendir(dirname);
+	for(i = 0; (entry = readdir(dp)); i++)
+		newFile(i,entry->d_name);	
+	closedir(dp);
 
-
+ return i;
+}

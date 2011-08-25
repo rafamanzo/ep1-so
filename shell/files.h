@@ -1,16 +1,17 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <time.h>
+#define MAX_DIR 1024
 
 struct arquivo
 {
  char name[NAME_MAX];
  char date[10];
- char *size;
+ char size[6];
  char perm[11];
 };
 typedef struct arquivo file;
 
-file files[50];
+file files[MAX_DIR];
 
-void newFile(int , char *);
+int startDir(char *);
