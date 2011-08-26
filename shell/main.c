@@ -78,13 +78,13 @@ void parser(WINDOW *menu, int tam, int quantidade)
         			}
 				break;
 			case 'r': /* R - Executar */
-				if(files[atual].perm[0] == '-' && files[atual].perm[3] == 'x')
-					run(files[atual].name);
-				else
-				{
+				if(files[atual].perm[0] == '-' && files[atual].perm[3] == 'x'){
+          strcpy(command, "./");
+          strcat(command, files[atual].name);
 					run(command);
+				}else
+				{
 					strcpy(erro, "Não é arquivo regular ou não é executável ");
-          printMenu(menu, tam, atual);
         			}
 				break;
 			case 'c': /* C - Mudar Diretório */
