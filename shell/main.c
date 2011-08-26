@@ -63,7 +63,6 @@ void parser(WINDOW *menu, int tam, int quantidade)
 				else
 				{
 					strcpy(erro, "Não é arquivo regular ");
-					strcat(erro, files[atual].name);
 				}
 				break;
 			case 'e': /* E - Editar */
@@ -76,7 +75,6 @@ void parser(WINDOW *menu, int tam, int quantidade)
 				else
 				{
 					strcpy(erro, "Não é arquivo regular ");
-					strcat(erro, files[atual].name);
         			}
 				break;
 			case 'r': /* R - Executar */
@@ -84,8 +82,9 @@ void parser(WINDOW *menu, int tam, int quantidade)
 					run(files[atual].name);
 				else
 				{
+					run(command);
 					strcpy(erro, "Não é arquivo regular ou não é executável ");
-					strcat(erro, files[atual].name);
+          printMenu(menu, tam, atual);
         			}
 				break;
 			case 'c': /* C - Mudar Diretório */
@@ -102,7 +101,6 @@ void parser(WINDOW *menu, int tam, int quantidade)
 				else
 				{
 					strcpy(erro, "Não é diretorio ");
-					strcat(erro, files[atual].name);
         			}
 				break;
 			case 'u':  /* U - Subir */

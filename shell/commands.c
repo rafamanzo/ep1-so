@@ -18,6 +18,6 @@ int run(char *program){
     return 0;
   }else{
     execl("/bin/sh","sh","-c",program,(char *) 0);
-    return -1;
+    return 0;
   }
 }
